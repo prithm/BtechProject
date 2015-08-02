@@ -2,41 +2,28 @@ import xml.etree.ElementTree as ET
 from bs4 import BeautifulSoup             
 import sys
 
-def genOwnerPaperCountTempFile(input, postType, fileout):
-	tree = ET.parse(input)
-	rawPosts = tree.getroot()
-	tempFile = open(fileout + '.temp.txt', 'w')
-	for rawPost in rawPosts:
-		post = rawPost.attrib
-		ownerUserId = post.get('OwnerUserId')
-		postTypeId = post.get('PostTypeId')
-		if postTypeId is not None and int(postTypeId) == postType and ownerUserId is not None and ownerUserId != '-1':
-			tempFile.write(ownerUserId + '\n')
-	tempFile.close()
-
-def genOwnerPostCount(fileout):
+def genOwnerPostCount(postInfo, postType, fileout):
 	ownerPostCount = {}
-	tempFile = open(fileout + '.temp.txt', 'r')
-	for line in tempFile:
-		ownerUserId = line.strip('\n').strip()
-		if ownerUserId not in ownerPostCount.keys():
+	postInfoFile = open(postInfo, 'r')
+	for line in postInfoFile:
+		lineParts = line.strip().strip('\n').split(' ')
+		postTypeId = int(lineParts[0])
+		ownerUserId = lineParts[1]
+		if postTypeId == postType:
+			if ownerUserId not in ownerPostCount.keys():
 				ownerPostCount[ownerUserId] = 1
-		else: 
-			ownerPostCount[ownerUserId] += 1
-	tempFile.close()
-	return ownerPostCount
+			else: 
+				ownerPostCount[ownerUserId] += 1
+	postInfoFile.close()
 
-def printSameOwnerPaperCount(ownerPostCount, fileout):
-	sameOwnerPaperCountOutputFile = open(fileout,'w')
-	for owner,count in ownerPostCount.items():
-			out = owner + ' ' + str(count)
-			sameOwnerPaperCountOutputFile.write(out + '\n')
-	sameOwnerPaperCountOutputFile.close()	 	
+	ownerPostCountOutputFile = open(fileout, 'w')
+	for ownerUserId, count in ownerPostCount.items():
+		ownerPostCountOutputFile.write(ownerUserId + ' ' + str(count))
+
+	ownerPostCountOutputFile.close()
 
 def main():
-	genOwnerPaperCountTempFile(sys.argv[1], int(sys.argv[2]), sys.argv[3])
-	ownerPostCount = genOwnerPostCount(sys.argv[3])
-	printSameOwnerPaperCount(ownerPostCount, sys.argv[3])
+	genOwnerPostCount(sys.argv[1], int(sys.argv[2]), sys.argv[3])
 	
 if __name__ == '__main__':
 	main()
