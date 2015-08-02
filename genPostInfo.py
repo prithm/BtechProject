@@ -1,7 +1,8 @@
 import xml.etree.ElementTree as ET
-from bs4 import BeautifulSoup             
+from bs4 import BeautifulSoup
 import sys
 
+#postType ownerUser postId parentId(absent in case of questions)
 def genPostTypeOwnerIdAndSelfId(input, fileout):
 	tree = ET.parse(input)
 	rawPosts = tree.getroot()
