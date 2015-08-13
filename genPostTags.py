@@ -36,8 +36,8 @@ def genTagCount(fileout):
 def printTagPostCount(tagPostCount, fileout):
 	tagPostCountOutputFile = open(fileout,'w')
 	for tag,count in tagPostCount.items():
-			out = tag + ' ' + str(count)
-			tagPostCountOutputFile.write(out + '\n')
+		out = tag + ' ' + str(count)
+		tagPostCountOutputFile.write(out + '\n')
 	tagPostCountOutputFile.close()
 
 def main():
