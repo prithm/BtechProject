@@ -39,6 +39,9 @@ def printRWWeightsLinkedByOwnerUserID(edgesLinkedByOwnerUserId, postTagWeightsIn
 								str(weight1*weight2) + '\n' \
 							)
 
+	edgesLinkedByOwnerUserIdFile.close()						
+	rwWeightsLinkedByOwnerUserIDOuputFile.close()
+
 
 def main():
 	printRWWeightsLinkedByOwnerUserID(sys.argv[1], sys.argv[2], sys.argv[3])

@@ -2,7 +2,7 @@ import xml.etree.ElementTree as ET
 from bs4 import BeautifulSoup
 import sys
 
-#Id Reputation DisplayName Views UpVotes DownVotes Age AccountId
+#Id Reputation Views UpVotes DownVotes Age AccountId DisplayName
 def genUserInfo(input, fileout):
 
 	tree = ET.parse(input)
