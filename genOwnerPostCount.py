@@ -5,7 +5,11 @@ import sys
 def genOwnerPostCount(postInfo, postType, fileout):
 	ownerPostCount = {}
 	postInfoFile = open(postInfo, 'r')
+	cnt = 0
 	for line in postInfoFile:
+		cnt += 1
+		if cnt % 1000 == 0:
+			print cnt
 		lineParts = line.strip().strip('\n').split(' ')
 		postTypeId = int(lineParts[0])
 		ownerUserId = lineParts[1]
