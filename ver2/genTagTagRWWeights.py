@@ -37,8 +37,8 @@ def genOwnerPostCount(postInfo, postType, fileout):
 					tagPostCount[tag] = 0
 				tagPostCount[tag] += 1 
 
-		if cnt > 1000:
-			break
+		#if cnt > 1000:
+		#	break
 		
 	postInfoFile.close()
 
@@ -64,8 +64,8 @@ def genOwnerPostCount(postInfo, postType, fileout):
 
 					tagTagProbFile.write(tag1 + ' ' + tag2 + ' ' + str(prob) + '\n')
 
-		if cnt > 1000:
-			break
+		#if cnt > 1000:
+		#	break
 		
 	postInfoFile.close()
 	tagTagProbFile.close()
