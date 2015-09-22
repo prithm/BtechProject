@@ -2,12 +2,12 @@ import xml.etree.ElementTree as ET
 from bs4 import BeautifulSoup             
 import sys
 
-def genOwnerPostCount(postInfo, fileout):
+def genOwnerPostCount(postInfo, postLinkInfo, fileout):
 	ownerPostCount = {}
 	ownerTagCount = {}
 	tagPostCount = {}
-	userAnswerPostIds = {} #contains postIds of Questions answered by user
-	postAnswerCount = {}
+	postLinkPostIds = {} #contains postIds from which there are links to this postId
+	postLinkCount = {}
 	postUserId = {}
 
 	postInfoFile = open(postInfo, 'r')
@@ -43,20 +43,40 @@ def genOwnerPostCount(postInfo, fileout):
 					tagPostCount[tag] = 0
 				tagPostCount[tag] += 1 
 
-		elif postTypeId == 2:
-			parentId = lineParts[3]
-			if ownerUserId not in userAnswerPostIds.keys():
-				userAnswerPostIds[ownerUserId] = []
-			userAnswerPostIds[ownerUserId].append(parentId)
-			if parentId not in postAnswerCount.keys():
-				postAnswerCount[parentId] = 0
-			postAnswerCount[parentId] += 1
-
-
 		#if cnt > 1000:
 		#	break
 		
 	postInfoFile.close()
+
+	
+	postLinkInfoFile = open(postLinkInfo, 'r')
+	cnt = 0
+	for line in postLinkInfoFile:
+		cnt += 1
+		if cnt % 1000 == 0:
+			print cnt
+		try:
+			lineParts = line.strip().strip('\n').split(' ')
+			fromPostId = lineParts[0]
+			toPostId = lineParts[1]
+			if fromPostId not in postUserId.keys() or toPostId not in postUserId.keys():
+				continue
+			if toPostId not in postLinkPostIds.keys():
+				postLinkPostIds[toPostId] = []
+			postLinkPostIds[toPostId].append(fromPostId)
+			
+			if fromPostId not in postLinkCount.keys():
+				postLinkCount[fromPostId] = 0
+			postLinkCount[fromPostId] += 1
+		
+		except Exception as e:
+			print line
+			print e
+			postLinkInfoFile.close()
+			exit()
+
+	postLinkInfoFile.close()
+
 
 	tagTagProbFile = open(fileout, 'w')
 	postInfoFile = open(postInfo, 'r')
@@ -69,13 +89,15 @@ def genOwnerPostCount(postInfo, fileout):
 		lineParts = line.strip().strip('\n').split(' ')
 		postTypeId = int(lineParts[0])
 		ownerUserId = lineParts[1]
+		postId = lineParts[2]
+
 		tags = lineParts[4].replace('<', ' ').replace('>', ' ').strip().split()
 
 		if postTypeId == 1:
-			if ownerUserId not in userAnswerPostIds.keys():
+			if postId not in postLinkPostIds.keys():
 				continue
 
-			for parentId in userAnswerPostIds[ownerUserId]:
+			for parentId in postLinkPostIds[postId]:
 				if parentId not in postUserId.keys():
 					continue
 				parentIdUser = postUserId[parentId]
@@ -84,7 +106,7 @@ def genOwnerPostCount(postInfo, fileout):
 						prob = \
 						(float(tagCount)/tagPostCount[tag2])\
 						*(1.0/ownerPostCount[parentIdUser])\
-						*(1.0/postAnswerCount[parentId])\
+						*(1.0/postLinkCount[parentId])\
 						*(1.0/ownerPostCount[ownerUserId])\
 						*(1.0/len(tags))
 
@@ -106,15 +128,15 @@ def genOwnerPostCount(postInfo, fileout):
 	# 	ownerPostCountOutputFile.write(tag + ' ' + str(count) + '\n')
 
 	# ownerTagCountOutputFile.close()
-	with open('ownerPostCount_answer', 'w') as f:
+	with open('ownerPostCount_link', 'w') as f:
 		for key,value in ownerPostCount.items():
 			f.write(str(key) + ' ' + str(value) + '\n')
 	
-	with open('tagPostCount_answer', 'w') as f:
+	with open('tagPostCount_link', 'w') as f:
 		for key,value in tagPostCount.items():
 			f.write(str(key) + ' ' + str(value) + '\n')
 
-	with open('ownerTagCount_answer', 'w') as f:
+	with open('ownerTagCount_link', 'w') as f:
 		for key,value in ownerTagCount.items():
 			tempDict = {}
 			tempDict[key] = value
@@ -122,7 +144,7 @@ def genOwnerPostCount(postInfo, fileout):
 
 
 def main():
-	genOwnerPostCount(sys.argv[1], sys.argv[2])
+	genOwnerPostCount(sys.argv[1], sys.argv[2], sys.argv[3])
 	
 if __name__ == '__main__':
 	main()
