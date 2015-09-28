@@ -35,7 +35,7 @@ def main():
 			f.write(out2)
 		tempDict[tag] = 0
 		#break
-
+	f.close()
 
 if __name__ == '__main__':
 	main()	

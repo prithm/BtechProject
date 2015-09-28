@@ -14,7 +14,13 @@ def main():
 			tag1 = lineParts[1]
 			if tag1 == tag2:
 				continue
-			prob = float(lineParts[2])
+			try:
+				prob = float(lineParts[2])
+			except Exception as e:
+				print cnt
+				print line
+				print e
+				continue
 			s = tag1+'$$$'+tag2
 			if tag1 not in tagTagProb.keys():
 				tagTagProb[tag1] = {}

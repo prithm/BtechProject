@@ -35,15 +35,19 @@ def genTopKTags(overallWeights, k, topKOutput):
 		for j in xrange(i,k-1):
 			if topKListValue[j] > topKListValue[j+1] :
 				temp = topKListValue[j]
-				topKListValue[j] = topKListValue[j+1]
+				temp2 = topKListValue[j+1]
+				topKListValue[j] = temp2
 				topKListValue[j+1] = temp
 				tempString = topKListPair[j]
-				topKListPair[j] = topKListPair[j+1]
+				tempString2 = topKListPair[j+1]		
+				topKListPair[j] = tempString2
 				topKListPair[j+1] = tempString
 
 
 	maxValue = topKListValue[k-1]
+	print maxValue
 	for i in xrange(0,k):
+		print topKListValue[k-1-i]
 		topKOutputFile.write\
 		(topKListPair[k-1-i][0] + ' ' + topKListPair[k-1-i][1] + ' ' + str(topKListValue[k-1-i]/maxValue) + '\n')
 
