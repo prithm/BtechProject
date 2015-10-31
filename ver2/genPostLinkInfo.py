@@ -1,12 +1,12 @@
 import xml.etree.ElementTree as ET
 from bs4 import BeautifulSoup
 import sys
+import pickle
 
 # fromId toId linkType
 def genPostLinkInfo(postLinkFile, fileout):
 	
-	postLinkInfoOutputFile = open(fileout, 'w')
-
+	out = []
 	cnt = 0
 	with open(postLinkFile,'r') as f:
 		for line in f: 
@@ -26,12 +26,17 @@ def genPostLinkInfo(postLinkFile, fileout):
 			linkType = post.get('LinkTypeId')
 			if sourcePostId is not None and targetPostId is not None and linkType is not None:
 				# if sourcePostId in questionIds and targetPostId in questionIds:
-				postLinkInfoOutputFile.write(sourcePostId + ' ' + targetPostId + ' ' + linkType + '\n')
-
+				# postLinkInfoOutputFile.write(sourcePostId + ' ' + targetPostId + ' ' + linkType + '\n')
+				tempDict = {}
+				tempDict['sourcePostId'] = sourcePostId
+				tempDict['targetPostId'] = targetPostId
+				tempDict['linkType'] = int(linkType)
+				out.append(tempDict)
 			# if cnt > 200000:	
 			# 	break
 
-	postLinkInfoOutputFile.close()
+	pickle.dump(out, open(fileout, 'wb') )		
+	
 
 
 def main():

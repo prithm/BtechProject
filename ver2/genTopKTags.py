@@ -1,55 +1,30 @@
 import sys
-
+import numpy as np
 
 def genTopKTags(overallWeights, k, topKOutput):
 	overallWeightsFile = open(overallWeights, 'r')
 	
-	topKListValue =[0 for i in xrange(0,k)]
-	topKListPair  =["" for i in xrange(0,k)]
+	topKListValue =[]
+	topKListPair  =[]
 
 	for line in overallWeightsFile:
 		lineParts = line.strip('\n').strip().split(' ')
 		value = float(lineParts[2])
-
-		flag = -1
-		for i in xrange(0,k):
-			if value > topKListValue[i]:
-				flag = i
-				break
-
-		if flag >= 0:
-			flag = 0
-			for i in xrange(1,k):
-				if topKListValue[flag] > topKListValue[i]:
-					flag = i
-			
-			topKListValue[flag] = value
-			topKListPair[flag] = (lineParts[0], lineParts[1])
+		topKListValue.append(-value)
+		topKListPair.append((lineParts[0], lineParts[1]))
 
 			
 
 	overallWeightsFile.close()
-
+	indices = np.argsort(topKListValue)
 	topKOutputFile = open(topKOutput, 'w')
-	for i in xrange(0,k-1):
-		for j in xrange(i,k-1):
-			if topKListValue[j] > topKListValue[j+1] :
-				temp = topKListValue[j]
-				temp2 = topKListValue[j+1]
-				topKListValue[j] = temp2
-				topKListValue[j+1] = temp
-				tempString = topKListPair[j]
-				tempString2 = topKListPair[j+1]		
-				topKListPair[j] = tempString2
-				topKListPair[j+1] = tempString
 
-
-	maxValue = topKListValue[k-1]
+	maxValue = topKListValue[indices[0]]
 	print maxValue
-	for i in xrange(0,k):
-		print topKListValue[k-1-i]
+	for i in indices[0:50]:
+		print topKListValue[i]
 		topKOutputFile.write\
-		(topKListPair[k-1-i][0] + ' ' + topKListPair[k-1-i][1] + ' ' + str(topKListValue[k-1-i]/maxValue) + '\n')
+		(topKListPair[i][0] + ' ' + topKListPair[i][1] + ' ' + str(topKListValue[i]/maxValue) + '\n')
 
 	topKOutputFile.close()	
 

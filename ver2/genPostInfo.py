@@ -1,12 +1,12 @@
 import xml.etree.ElementTree as ET
 from bs4 import BeautifulSoup
 import sys
+import pickle
 
 #postType ownerUser postId parentId tags
 def genPostTypeOwnerIdAndSelfId(input, fileout):
 	cnt = 0
-	
-	postInfoOutputFile = open(fileout, 'w')
+	out = []
 	with open(input,'r') as f:
 		for line in f: 
 			cnt += 1
@@ -20,7 +20,7 @@ def genPostTypeOwnerIdAndSelfId(input, fileout):
 			postId = post.get('Id')
 			ownerUserId = post.get('OwnerUserId')
 			postTypeId = post.get('PostTypeId')
-			
+			body = post.get('Body')
 			tags = post.get('Tags')
 			if tags is None:
 				tags = '<>'
@@ -32,12 +32,21 @@ def genPostTypeOwnerIdAndSelfId(input, fileout):
 						parentId = '-1'
 				else:
 					parentId = '-1'
-				postInfoOutputFile.write(postTypeId + ' ' + ownerUserId + ' ' + postId + ' ' + parentId + ' ' + tags + '\n')
+				tempDict = {}
+				tempDict['Id'] = postId
+				tempDict['ownerUserId'] = ownerUserId
+				tempDict['postTypeId'] = postTypeId
+				tempDict['parentId'] = parentId
+				tempDict['tags'] = tags
+				tempDict['Body'] = body
+				out.append(tempDict)
+				# postInfoOutputFile.write(postTypeId + ' ' + ownerUserId + ' ' + postId + ' ' + parentId + ' ' + tags + '\n')
 
 			if cnt % 1000 == 0:
 				print cnt
 
-	postInfoOutputFile.close()
+				
+	pickle.dump( out, open(fileout, "wb") )
 
 
 def main():
