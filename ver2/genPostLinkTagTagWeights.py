@@ -12,9 +12,11 @@ def genOwnerPostCount(postInfo, postLinkInfo, fileout):
 	postUserId = {}
 
 	print 'initialising'
+	sys.stdout.flush()
 	posts = pickle.load(open(postInfo, 'rb'))
 	postLinks = pickle.load(open(postLinkInfo, 'rb'))
 	print 'initialised'
+	sys.stdout.flush()
 	cnt = 0
 	for post in posts:
 		cnt += 1
@@ -24,7 +26,8 @@ def genOwnerPostCount(postInfo, postLinkInfo, fileout):
 		postId = post['Id']
 		postTypeId = int(post['postTypeId'])
 		ownerUserId = post['ownerUserId']
-		tags = post['tags'].replace('<', ' ').replace('>', ' ').strip().split()
+		# tags = post['tags'].replace('<', ' ').replace('>', ' ').strip().split()
+		tags = post['tags']
 
 		if postTypeId == 1:
 			postUserId[postId] = ownerUserId
@@ -54,6 +57,7 @@ def genOwnerPostCount(postInfo, postLinkInfo, fileout):
 		cnt += 1
 		if cnt % 1000 == 0:
 			print cnt
+			sys.stdout.flush()
 		try:
 			fromPostId = postLink['sourcePostId']
 			toPostId = postLink['targetPostId']
@@ -84,7 +88,8 @@ def genOwnerPostCount(postInfo, postLinkInfo, fileout):
 		postId = post['Id']
 		postTypeId = int(post['postTypeId'])
 		ownerUserId = post['ownerUserId']
-		tags = post['tags'].replace('<', ' ').replace('>', ' ').strip().split()
+		# tags = post['tags'].replace('<', ' ').replace('>', ' ').strip().split()
+		tags = post['tags']
 
 		if postTypeId == 1:
 			if postId not in postLinkPostIds.keys():

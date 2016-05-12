@@ -10,17 +10,21 @@ def genSameOwnerTagTagWeights(postInfo, fileout):
 
 	tagTotProb = {}
 	print 'initialising'
+	sys.stdout.flush()
 	posts = pickle.load(open(postInfo, 'rb'))
 	print 'initialised'
+	sys.stdout.flush()
 	cnt = 0
 	for post in posts:
 		cnt += 1
 		if cnt % 1000 == 0:
 			print cnt
+			sys.stdout.flush()
 
 		postTypeId = post['postTypeId']
 		ownerUserId = post['ownerUserId']
-		tags = post['tags'].replace('<', ' ').replace('>', ' ').strip().split()
+		# tags = post['tags'].replace('<', ' ').replace('>', ' ').strip().split()
+		tags = post['tags']
 		if int(postTypeId) == 1:
 			if ownerUserId not in ownerPostCount.keys():
 				ownerPostCount[ownerUserId] = 1
@@ -48,10 +52,12 @@ def genSameOwnerTagTagWeights(postInfo, fileout):
 		cnt += 1
 		if cnt % 1000 == 0:
 			print cnt
+			sys.stdout.flush()
 
 		postTypeId = post['postTypeId']
 		ownerUserId = post['ownerUserId']
-		tags = post['tags'].replace('<', ' ').replace('>', ' ').strip().split()
+		# tags = post['tags'].replace('<', ' ').replace('>', ' ').strip().split()
+		tags = post['tags']
 
 		if int(postTypeId) == 1:
 			for tag2,tagCount in ownerTagCount[ownerUserId].items():
@@ -83,3 +89,4 @@ def main():
 	
 if __name__ == '__main__':
 	main()
+

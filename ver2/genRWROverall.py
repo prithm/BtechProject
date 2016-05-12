@@ -18,10 +18,10 @@ tagList = list(tags)
 
 if __name__ == '__main__':
 	tot = len(tags)
-	mul = 30
+	mul = 2400
 	fac = tot/mul
 	for i in xrange(0,fac+1):
-		if i*30 >= tot:
+		if i*mul >= tot:
 			break
 		command = 'nohup python ' + sys.argv[1] + ' ' + sys.argv[2] + ' ' +  str(i) + ' ' + str(i*mul) + ' ' + str(min(i*mul+mul,len(tags))) + ' &'
 		print command

@@ -8,7 +8,7 @@ def get_combined_ranks(ranklists):
 	for ranklist in ranklists:
 		if len(ranklist) == 0:
 			emptyRankList += 1
-	if emptyRankList >= 2:
+	if emptyRankList >= 1:
 		for ranklist in ranklists:
 			if len(ranklist) > 0:
 				sorted_ranklist = sorted(ranklist.items(), key=lambda x:x[1], reverse = True)
@@ -33,7 +33,12 @@ def get_combined_ranks(ranklists):
 	
 	alpha = 0.85
 	ranker, score = r.pagerank_aggregator(objects, 0.000001, alpha)
-	return ranker,score
+	final_ranklist = sorted(ranker.items(), key=lambda x:x[1])
+	final_ranklist = final_ranklist[:10]
+	final_keys = []
+	for i in xrange(0,len(final_ranklist)):
+		final_keys.append(oid_name[final_ranklist[i][0]])
+	return final_keys,score
 
 if __name__ == '__main__':
 	ranklists = pickle.load( open(sys.argv[1], 'rb'))

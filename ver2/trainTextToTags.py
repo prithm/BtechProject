@@ -8,7 +8,7 @@ import scipy.spatial.distance as ds
 if __name__ == '__main__':
 	out = pickle.load(open(sys.argv[1], 'r'))
 	sentences = []
-	num = 2000
+	num = 10000
 	for i in xrange(0,num):
 		if int(out[i]['postTypeId']) != 1:
 			continue

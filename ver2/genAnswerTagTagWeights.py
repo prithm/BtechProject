@@ -14,14 +14,17 @@ def genOwnerPostCount(postInfo, fileout):
 	tagTotProb = {}
 	tagTagProb = {}
 	print 'initialising'
+	sys.stdout.flush()
 	posts = pickle.load(open(postInfo, 'rb'))
 	print 'initialised'
+	sys.stdout.flush()
 	
 	cnt = 0
 	for post in posts:
 		cnt += 1
 		if cnt % 1000 == 0:
 			print cnt
+			sys.stdout.flush()
 
 		postId = int(post['Id'])
 		postTypeId = int(post['postTypeId'])
@@ -66,6 +69,7 @@ def genOwnerPostCount(postInfo, fileout):
 		cnt += 1
 		if cnt % 1000 == 0:
 			print cnt
+			sys.stdout.flush()
 
 		postId = int(post['Id'])
 		postTypeId = int(post['postTypeId'])

@@ -8,9 +8,8 @@ import scipy.spatial.distance as ds
 if __name__ == '__main__':
 	out = pickle.load(open(sys.argv[1], 'rb'))
 	model = doc2vec.Doc2Vec.load(sys.argv[2])
-	test_docs = out[2001:2020]
+	test_docs = out[100001:150000]
 	predicted_tags = []
-
 	for test_doc in test_docs:
 		if int(test_doc['postTypeId']) != 1:
 			continue
@@ -41,9 +40,9 @@ if __name__ == '__main__':
 		temp = {}
 		temp['expected'] = orig_tags
 		temp['predicted'] = rec_tags_sorted_truncate
-		temp['body'] = BeautifulSoup(body).get_text()
+		temp['body'] = body
 		predicted_tags.append(temp)
-		print orig_tags, rec_tags_sorted_truncate
+		#print orig_tags, rec_tags_sorted_truncate
 
 	pickle.dump(predicted_tags, open(sys.argv[3], 'wb'))
 
